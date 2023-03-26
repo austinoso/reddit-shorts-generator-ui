@@ -1,22 +1,31 @@
-import { Worker } from "bullmq";
+import { spawn } from "child_process";
 
-async function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+async function createWorker(postUrl: string) {
+  const child = spawn(
+    "cd " +
+      __dirname +
+      "/../" +
+      " && " +
+      `POST=${postUrl} node videoGenerator/dist/main.js`,
+    { shell: true }
+  );
+
+  // console log pid
+  console.log("child process pid: ", child.pid);
+
+  child.stdout.on("data", (data: any) => {
+    console.log(`stdout: ${data}`);
+  });
+
+  child.stderr.on("data", (data: any) => {
+    console.error(`stderr: ${data}`);
+  });
+
+  child.on("close", (code: any) => {
+    console.log(`child process exited with code ${code}`);
+  });
+
+  return child;
 }
 
-const workerHandler = async (job: any) => {
-  console.log("Generating video for post: " + job.data.postUrl);
-  await sleep(15000);
-  console.log("Done!");
-};
-
-const workerOptions = {
-  connection: {
-    host: "localhost",
-    port: 6379,
-  },
-};
-
-const videoWorker = new Worker("videoJobQueue", workerHandler, workerOptions);
-
-console.log("Worker started!");
+export default createWorker;

@@ -1,0 +1,17 @@
+version: '3.7'
+
+volumes:
+  shorts-bot:    
+
+services:
+  node-bot:
+    build: ./
+    container_name: shorts-bot
+    command: npm run start
+    privileged: true
+    environment:
+      POST: "${POST}"
+      GOOGLE_APPLICATION_CREDENTIALS: "/app/credentials.json"
+    volumes:
+      - /home/austin/shorts-bot/output:/app/output
+      - ${CREDENTIALS_VOLUME}:/app/credentials.json

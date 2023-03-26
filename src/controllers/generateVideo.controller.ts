@@ -1,10 +1,10 @@
-import { addToVideoQueue, stopWorker } from "../services/generateVideo.service";
+import { startWorker, stopWorker } from "../services/generateVideo.service";
 import { Request, Response, NextFunction } from "express";
 
 export async function process(req: Request, res: Response, next: NextFunction) {
   try {
     const { postUrl } = req.body;
-    const job = await addToVideoQueue(postUrl);
+    const job = await startWorker(postUrl);
     res.json({ message: "Added video to queue" });
   } catch (e) {
     console.log("Error creating video: ", e);
