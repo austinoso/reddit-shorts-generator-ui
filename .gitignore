@@ -1,5 +1,2 @@
-client/*
-!client/dist
-!client/dist
 node_modules
 .env
