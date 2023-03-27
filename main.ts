@@ -11,11 +11,13 @@ connectMongo();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get("/", (req: Request, res: Response) => {
+app.get("/api", (req: Request, res: Response) => {
   res.send("Hello World!");
 });
 
-app.use("/videos", videoRouter);
+app.use("/api/videos", videoRouter);
+
+app.use(express.static("client/dist"));
 
 app.listen(port, () => {
   console.log(`Reddit Shorts Bot Running on http://localhost:${port}`);
