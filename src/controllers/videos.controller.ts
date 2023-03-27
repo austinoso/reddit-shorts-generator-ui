@@ -25,8 +25,7 @@ export async function get(req: Request, res: Response, next: NextFunction) {
 
 export async function create(req: Request, res: Response, next: NextFunction) {
   try {
-    const { postUrl } = req.body;
-    const video = await createVideo(postUrl);
+    const video = await createVideo(req.body);
 
     res.json({
       ok: true,

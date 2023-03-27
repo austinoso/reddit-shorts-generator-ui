@@ -15,14 +15,8 @@ export async function getAllVideos() {
   return videos;
 }
 
-export async function createVideo(postUrl: string) {
+export async function createVideo(video: IVideo) {
   console.log("create video");
-
-  const video = {
-    title: "",
-    postId: "",
-    url: postUrl,
-  };
 
   const newVideo = new Video(video);
   await newVideo.save();
