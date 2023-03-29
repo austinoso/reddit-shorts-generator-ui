@@ -39,6 +39,19 @@ export default function VideoTable() {
   const { videos, setVideos } = useVideoContext();
   const [disableStartButton, setDisableStartButton] = useState(false);
 
+  const processingVideos = (videos: any) => {
+    let processingVideos = videos.filter(
+      (video: any) => video.status === "processing"
+    );
+
+    return processingVideos;
+  };
+
+  const allowedToStart = (videos: any) => {
+    if (processingVideos(videos).length > 0) return false;
+    return true;
+  };
+
   useEffect(() => {
     fetch("/api/videos")
       .then((res) => res.json())
@@ -48,17 +61,7 @@ export default function VideoTable() {
   }, []);
 
   useEffect(() => {
-    console.log(videos);
-
-    let processingVideos = videos.filter(
-      (video) => video.status === "processing"
-    );
-
-    if (processingVideos.length > 0) {
-      setDisableStartButton(true);
-    } else {
-      setDisableStartButton(false);
-    }
+    setDisableStartButton(!allowedToStart(videos));
   }, [videos]);
 
   const statusBadgeClasses: any = {
