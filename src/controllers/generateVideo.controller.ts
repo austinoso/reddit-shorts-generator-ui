@@ -3,9 +3,10 @@ import { Request, Response, NextFunction } from "express";
 
 export async function process(req: Request, res: Response, next: NextFunction) {
   try {
-    const { postUrl } = req.body;
-    const job = await startWorker(postUrl);
-    res.json({ message: "Added video to queue" });
+    const { videoId } = req.body;
+    const worker = await startWorker(videoId);
+    worker.pid;
+    res.json({ message: "Added video to queue", workerId: worker.pid });
   } catch (e) {
     console.log("Error creating video: ", e);
     next(e);

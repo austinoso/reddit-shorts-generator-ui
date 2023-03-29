@@ -5,7 +5,10 @@ const videoSchema = new mongoose.Schema(
     name: String,
     title: String,
     postId: String,
-    url: String,
+    url: {
+      type: String,
+      required: true,
+    },
     status: {
       type: String,
       enum: ["new", "processing", "complete", "error"],
