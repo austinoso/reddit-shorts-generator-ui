@@ -6,6 +6,11 @@ const videoSchema = new mongoose.Schema(
     title: String,
     postId: String,
     url: String,
+    status: {
+      type: String,
+      enum: ["new", "processing", "complete", "error"],
+      default: "new",
+    },
   },
   {
     timestamps: true,
