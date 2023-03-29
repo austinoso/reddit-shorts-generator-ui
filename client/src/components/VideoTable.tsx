@@ -50,11 +50,15 @@ export default function VideoTable() {
   useEffect(() => {
     console.log(videos);
 
-    videos.forEach((video) => {
-      if (video.status === "processing") {
-        setDisableStartButton(true);
-      }
-    });
+    let processingVideos = videos.filter(
+      (video) => video.status === "processing"
+    );
+
+    if (processingVideos.length > 0) {
+      setDisableStartButton(true);
+    } else {
+      setDisableStartButton(false);
+    }
   }, [videos]);
 
   const statusBadgeClasses: any = {
