@@ -13,7 +13,7 @@ export async function startWorker(videoId: string) {
   if (worker) return worker;
   console.log("Creating worker...");
 
-  worker = await createWorker(video.url);
+  worker = await createWorker(video.url, video._id.toString());
 
   worker.on("close", (code: any) => {
     console.log(`child process exited with code ${code}`);
