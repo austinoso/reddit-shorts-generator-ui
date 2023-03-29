@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import AddVideo from "./AddVideo";
 import { useVideoContext } from "../contexts/videos";
+import VideoActionButon from "./VideoActionButton";
 
 const people = [
   {
@@ -36,6 +37,7 @@ export default function VideoTable() {
   //   },
   // ]);
   const { videos, setVideos } = useVideoContext();
+  const [disableStartButton, setDisableStartButton] = useState(false);
 
   useEffect(() => {
     fetch("/api/videos")
@@ -47,11 +49,17 @@ export default function VideoTable() {
 
   useEffect(() => {
     console.log(videos);
+
+    videos.forEach((video) => {
+      if (video.status === "processing") {
+        setDisableStartButton(true);
+      }
+    });
   }, [videos]);
 
   const statusBadgeClasses: any = {
     added: "bg-grey-400 text-gray-800",
-    completed: "bg-green-100 text-green-800",
+    complete: "bg-green-100 text-green-800",
     processing: "bg-yellow-100 text-yellow-800",
     error: "bg-red-100 text-red-800",
   };
@@ -122,7 +130,7 @@ export default function VideoTable() {
                         {video.name}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {video.title || ""}
+                        {video.title || "..."}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         <span
@@ -133,11 +141,14 @@ export default function VideoTable() {
                           {video.status || "Added"}
                         </span>
                       </td>
-
-                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 flex justify-end space-x-3">
+                        <VideoActionButon
+                          status={video.status}
+                          disableStartButton={disableStartButton}
+                        />
                         <a
                           href="#"
-                          className="text-blue-600 hover:text-blue-900"
+                          className="text-gray-600 hover:text-blue-900"
                         >
                           Edit<span className="sr-only">, {video.name}</span>
                         </a>
