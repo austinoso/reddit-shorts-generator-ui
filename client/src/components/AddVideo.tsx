@@ -1,5 +1,9 @@
+import { useVideoContext } from "../contexts/videos";
+
 export default function AddVideo() {
-  const handleSubmit = (e: any) => {
+  const { videos, setVideos } = useVideoContext();
+
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     const data = new FormData(e.target);
 
@@ -9,6 +13,20 @@ export default function AddVideo() {
     };
 
     console.log(videoData);
+
+    const res = await fetch("/api/videos", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(videoData),
+    });
+
+    const json = await res.json();
+
+    console.log(json);
+
+    setVideos([...videos, json.data.video]);
   };
 
   return (

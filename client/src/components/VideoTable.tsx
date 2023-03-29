@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import AddVideo from "./AddVideo";
+import { useVideoContext } from "../contexts/videos";
 
 const people = [
   {
@@ -12,34 +13,35 @@ const people = [
 ];
 
 export default function VideoTable() {
-  const [videos, setVideos] = useState([
-    {
-      _id: "64221d45a172d63c646a44d1",
-      title: "What’s the best thing about the US?",
-      postId: "",
-      url: "test",
-      name: "Untitled2",
-      status: "processing",
-      createdAt: "2023-03-27T22:48:37.603Z",
-      updatedAt: "2023-03-27T22:48:37.603Z",
-      __v: 0,
-    },
-    {
-      _id: "64221e41c77ca5cee5c54548",
-      name: "Untitled",
-      url: "test",
-      status: "added",
-      createdAt: "2023-03-27T22:52:49.106Z",
-      updatedAt: "2023-03-27T22:52:49.106Z",
-      __v: 0,
-    },
-  ]);
+  // const [videos, setVideos] = useState([
+  //   {
+  //     _id: "64221d45a172d63c646a44d1",
+  //     title: "What’s the best thing about the US?",
+  //     postId: "",
+  //     url: "test",
+  //     name: "Untitled2",
+  //     status: "processing",
+  //     createdAt: "2023-03-27T22:48:37.603Z",
+  //     updatedAt: "2023-03-27T22:48:37.603Z",
+  //     __v: 0,
+  //   },
+  //   {
+  //     _id: "64221e41c77ca5cee5c54548",
+  //     name: "Untitled",
+  //     url: "test",
+  //     status: "added",
+  //     createdAt: "2023-03-27T22:52:49.106Z",
+  //     updatedAt: "2023-03-27T22:52:49.106Z",
+  //     __v: 0,
+  //   },
+  // ]);
+  const { videos, setVideos } = useVideoContext();
 
   useEffect(() => {
     fetch("/api/videos")
       .then((res) => res.json())
       .then((data) => {
-        setVideos(data.data);
+        setVideos(data.data.videos);
       });
   }, []);
 

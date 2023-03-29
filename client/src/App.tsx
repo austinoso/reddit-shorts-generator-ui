@@ -5,6 +5,7 @@ import Layout from "./components/common/Layout";
 import VideoTable from "./components/VideoTable";
 import VideoForm from "./components/VideoForm";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { VideoProvider } from "./contexts/videos";
 
 const router = createBrowserRouter([
   {
@@ -20,9 +21,11 @@ const router = createBrowserRouter([
 function App() {
   return (
     <div className="App">
-      <Layout>
-        <RouterProvider router={router} />
-      </Layout>
+      <VideoProvider>
+        <Layout>
+          <RouterProvider router={router} />
+        </Layout>
+      </VideoProvider>
     </div>
   );
 }
