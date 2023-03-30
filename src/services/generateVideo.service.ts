@@ -3,17 +3,29 @@ import createWorker from "../../workers/generateVideo.worker";
 import Video from "../models/video.model";
 import { sendWSMessage } from "../wsServer";
 import { updateVideo } from "./videos.service";
+import { exec } from "child_process";
 
 let worker: any;
 
 export async function startWorker(videoId: string) {
   console.log("Starting video worker...");
 
-  const video = await Video.findById(videoId);
+  const video = await updateVideo(videoId, {
+    status: "processing",
+  });
+
   if (!video) return { error: "Video not found" };
 
+  sendWSMessage({
+    type: "generateVideo",
+    data: {
+      status: "running",
+      video: video,
+    },
+  });
+
   if (worker) return worker;
-  console.log("Creating worker...");
+  console.log("Creating worker... " + worker);
 
   worker = await createWorker(video.url, video._id.toString());
 
@@ -22,12 +34,17 @@ export async function startWorker(videoId: string) {
     worker = null;
 
     let error = null;
-    if (code !== 0) {
+    if (code !== 0 && code !== null) {
       error = "Error generating video";
     }
 
+    let newStatus = "";
+    if (code === 0) newStatus = "complete";
+    if (code === null) newStatus = "new";
+    if (error !== null) newStatus = "error";
+
     const video = await updateVideo(videoId, {
-      status: error ? "error" : "complete",
+      status: newStatus,
     });
 
     sendWSMessage({
@@ -44,10 +61,9 @@ export async function startWorker(videoId: string) {
 }
 
 export async function stopWorker() {
-  console.log("Stopping video worker...");
+  console.log("Stopping video worker...:" + worker.pid);
   if (worker) {
-    // worker.stdin.pause();
-    await worker.kill();
+    process.kill(-worker.pid);
     worker = null;
   }
 }
