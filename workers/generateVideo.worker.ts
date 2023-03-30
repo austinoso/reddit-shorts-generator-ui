@@ -1,5 +1,4 @@
 import { spawn } from "child_process";
-import { sendWSMessage } from "../src/wsServer";
 
 async function createWorker(postUrl: string, id: string) {
   const child = spawn(
@@ -7,7 +6,7 @@ async function createWorker(postUrl: string, id: string) {
       __dirname +
       "/../" +
       " && " +
-      `POST=${postUrl} node videoGenerator/dist/main.js`,
+      `POST=${postUrl} VIDEO_ID=${id} node videoGenerator/dist/main.js`,
     { shell: true }
   );
 
@@ -20,24 +19,6 @@ async function createWorker(postUrl: string, id: string) {
 
   child.stderr.on("data", (data: any) => {
     console.error(`stderr: ${data}`);
-  });
-
-  child.on("close", (code: any) => {
-    console.log(`child process exited with code ${code}`);
-
-    let error = null;
-    if (code !== 0) {
-      error = "Error generating video";
-    }
-
-    sendWSMessage({
-      type: "generateVideo",
-      data: {
-        status: "closed",
-        videoId: id,
-        error: error,
-      },
-    });
   });
 
   return child;
