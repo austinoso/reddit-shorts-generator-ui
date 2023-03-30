@@ -38,14 +38,7 @@ export async function startWorker(videoId: string) {
       error = "Error generating video";
     }
 
-    let newStatus = "";
-    if (code === 0) newStatus = "complete";
-    if (code === null) newStatus = "new";
-    if (error !== null) newStatus = "error";
-
-    const video = await updateVideo(videoId, {
-      status: newStatus,
-    });
+    const video = await updateVideoStatusWithCloseCode(videoId, code);
 
     sendWSMessage({
       type: "generateVideo",
@@ -66,4 +59,16 @@ export async function stopWorker() {
     process.kill(-worker.pid);
     worker = null;
   }
+}
+
+async function updateVideoStatusWithCloseCode(videoId: string, code: number) {
+  let newStatus = "error";
+  if (code === 0) newStatus = "complete";
+  if (code === null) newStatus = "new";
+
+  const video = await updateVideo(videoId, {
+    status: newStatus,
+  });
+
+  return video;
 }
