@@ -25,17 +25,13 @@ function App() {
   const { videos, setVideos } = useVideoContext();
 
   const handleGenerateVideoMessage = (messageData: any) => {
-    const { status, videoId, error } = messageData;
+    const { status, video, error } = messageData;
 
-    const video = videos.find((video) => video._id === videoId);
-    console.log("video", video);
-    if (!video) return;
-
-    if (status === "closed") {
-      video.status = "complete";
+    // replace updated video in videos array
+    const videoIndex = videos.findIndex((v) => v._id === video._id);
+    if (videoIndex !== -1) {
+      videos[videoIndex] = video;
     }
-
-    console.log("videos", videos);
 
     setVideos([...videos]);
   };
@@ -47,7 +43,8 @@ function App() {
       const data = JSON.parse(event.data);
       console.log(data);
 
-      if (data.type === "generateVideo") handleGenerateVideoMessage(data.data);
+      if (data.type === "generateVideo" || data.type === "UPDATE_VIDEO")
+        handleGenerateVideoMessage(data.data);
     },
   });
 
