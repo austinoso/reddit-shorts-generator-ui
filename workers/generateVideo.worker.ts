@@ -7,7 +7,7 @@ async function createWorker(postUrl: string, id: string) {
       "/../" +
       " && " +
       `POST=${postUrl} VIDEO_ID=${id} node videoGenerator/dist/main.js`,
-    { shell: true }
+    { detached: true, shell: true }
   );
 
   // console log pid
