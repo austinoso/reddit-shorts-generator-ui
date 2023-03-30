@@ -4,7 +4,9 @@ import {
   removeVideo,
   getAllVideos,
   getVideo,
+  updateVideo,
 } from "../services/videos.service";
+import { sendWSMessage } from "../wsServer";
 
 export async function get(req: Request, res: Response, next: NextFunction) {
   try {
@@ -42,7 +44,22 @@ export async function create(req: Request, res: Response, next: NextFunction) {
 
 export async function update(req: Request, res: Response, next: NextFunction) {
   try {
-    res.json({ message: "Updated video" });
+    const { id } = req.params;
+    const video = await updateVideo(id, req.body);
+
+    await sendWSMessage({
+      type: "UPDATE_VIDEO",
+      data: {
+        video: video,
+      },
+    });
+
+    res.json({
+      message: "Updated video",
+      data: {
+        video: video,
+      },
+    });
   } catch (e) {
     console.log("Error updating video: ", e);
     next(e);
