@@ -24,8 +24,12 @@ export async function createVideo(video: IVideo) {
   return newVideo;
 }
 
-export async function updateVideo(video: any) {
-  console.log("update video");
+export async function updateVideo(videoId: any, data: any) {
+  const video = Video.findOneAndUpdate({ _id: videoId }, data, {
+    new: true,
+  });
+
+  return video;
 }
 
 export async function removeVideo(id: string) {
