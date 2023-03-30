@@ -33,8 +33,21 @@ export default function VideoActionButton({
     }
   };
 
-  const handleStop = () => {
+  const handleStop = async () => {
     console.log("stopping: " + video._id);
+
+    const res = await fetch(`/api/videos/stop`, {
+      method: "POST",
+    });
+
+    const data = await res.json();
+
+    console.log(data);
+    if (!data.error) {
+      setDisableStartButton(false);
+    } else {
+      console.log(data.error);
+    }
   };
 
   if (video.status === "complete") {
