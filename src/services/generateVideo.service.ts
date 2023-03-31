@@ -3,7 +3,6 @@ import createWorker from "../../workers/generateVideo.worker";
 import Video from "../models/video.model";
 import { sendWSMessage } from "../wsServer";
 import { updateVideo } from "./videos.service";
-import { exec } from "child_process";
 
 let worker: any;
 

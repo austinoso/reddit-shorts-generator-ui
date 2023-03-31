@@ -29,7 +29,6 @@ export async function sendWSMessage(message: any) {
 
   const data = JSON.stringify(message);
 
-  console.log("clients", clients);
   for (const id in clients) {
     const client = clients[id];
     if (client.readyState === WebSocket.OPEN) {
