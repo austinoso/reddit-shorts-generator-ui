@@ -1,3 +1,5 @@
+import { startVideoProcessing, stopVideoProcessing } from "../utils/videoAPI";
+
 interface VideoActionButtonProps {
   video: any;
   disableStartButton: boolean;
@@ -18,17 +20,9 @@ export default function VideoActionButton({
     setDisableStartButton(true);
     console.log("starting: " + video._id);
 
-    const res = await fetch(`/api/videos/generate`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ videoId: video._id }),
-    });
+    const data = await startVideoProcessing(video._id);
 
-    const data = await res.json();
-
-    if (!data.workerId) {
+    if (data && !data.workerId) {
       setDisableStartButton(false);
     }
   };
@@ -36,14 +30,10 @@ export default function VideoActionButton({
   const handleStop = async () => {
     console.log("stopping: " + video._id);
 
-    const res = await fetch(`/api/videos/stop`, {
-      method: "POST",
-    });
-
-    const data = await res.json();
+    const data = await stopVideoProcessing();
 
     console.log(data);
-    if (!data.error) {
+    if (data && !data.error) {
       setDisableStartButton(false);
     } else {
       console.log(data.error);
