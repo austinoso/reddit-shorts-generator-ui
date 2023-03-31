@@ -7,11 +7,12 @@ import VideoForm from "./components/VideoForm";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import useWebSocket from "react-use-websocket";
 import { useVideoContext } from "./contexts/videos";
+import Home from "./pages/Home";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <VideoTable />,
+    element: <Home />,
   },
   {
     path: "/videos/:id",
