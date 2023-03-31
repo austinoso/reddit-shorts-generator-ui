@@ -4,7 +4,8 @@ import { useVideoContext } from "../contexts/videos";
 import VideoActionButon from "./VideoActionButton";
 
 export default function VideoTable() {
-  const { videos, setVideos } = useVideoContext();
+  const { videos, setVideos, workingVideo, workingProgress } =
+    useVideoContext();
   const [disableStartButton, setDisableStartButton] = useState(false);
 
   const processingVideos = (videos: any) => {
@@ -114,6 +115,14 @@ export default function VideoTable() {
                           )}`}
                         >
                           {video.status || "Added"}
+                          {video.status === "processing" && (
+                            <span className="ml-1">
+                              {workingVideo?._id === video._id
+                                ? `${workingProgress} %`
+                                : ""}
+                              <span className="sr-only">Complete</span>
+                            </span>
+                          )}
                         </span>
                       </td>
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 flex justify-end space-x-3">

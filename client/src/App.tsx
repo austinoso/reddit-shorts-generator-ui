@@ -22,8 +22,10 @@ const router = createBrowserRouter([
 const WS_URL = "ws://localhost:7778";
 
 function App() {
-  const { videos, setVideos } = useVideoContext();
+  const { videos, setVideos, setWorkingProgress, setWorkingVideo } =
+    useVideoContext();
 
+  // TODO: this needs to be refactored
   const handleGenerateVideoMessage = (messageData: any) => {
     const { status, video, error } = messageData;
 
@@ -33,7 +35,13 @@ function App() {
       videos[videoIndex] = video;
     }
 
+    setWorkingVideo(videos[videoIndex]);
     setVideos([...videos]);
+  };
+
+  const handleGenerateVideoProgressMessage = (messageData: any) => {
+    const { progress } = messageData;
+    setWorkingProgress(parseInt(progress));
   };
 
   useWebSocket(WS_URL, {
@@ -45,6 +53,10 @@ function App() {
 
       if (data.type === "generateVideo" || data.type === "UPDATE_VIDEO")
         handleGenerateVideoMessage(data.data);
+
+      if (data.type === "generateVideoProgress") {
+        handleGenerateVideoProgressMessage(data.data);
+      }
     },
   });
 
