@@ -20,6 +20,7 @@ app.get("/api", (req: Request, res: Response) => {
 app.use("/api/videos", videoRouter);
 
 app.use(express.static("client/dist"));
+app.use("/files", express.static("output"));
 
 app.listen(port, () => {
   console.log(`Reddit Shorts Bot Running on http://localhost:${port}`);
