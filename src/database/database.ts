@@ -1,4 +1,5 @@
 import mongoose, { Connection } from "mongoose";
+import { resetVideos } from "../models/video.model";
 
 let db: Connection;
 
@@ -15,6 +16,7 @@ export const connectMongo = async () => {
 
   db = await mongoose.connection;
 
+  await resetVideos();
   console.log("Connected to MongoDB");
 };
 

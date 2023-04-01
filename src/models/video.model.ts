@@ -22,4 +22,19 @@ const videoSchema = new mongoose.Schema(
 
 const Video = mongoose.model("Video", videoSchema);
 
+export async function resetVideos() {
+  // set all videos status to new if they are not complete or error
+
+  const videos = await Video.find({
+    status: { $nin: ["complete", "error"] },
+  });
+
+  for (let i = 0; i < videos.length; i++) {
+    console.log("resetting video: " + videos[i]._id);
+    const video = videos[i];
+    video.status = "new";
+    await video.save();
+  }
+}
+
 export default Video;
