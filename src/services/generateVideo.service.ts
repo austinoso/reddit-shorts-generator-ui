@@ -49,7 +49,7 @@ export async function startWorker(videoId: string) {
     });
   });
 
-  return worker;
+  return { worker: worker, video: video };
 }
 
 export async function stopWorker() {
