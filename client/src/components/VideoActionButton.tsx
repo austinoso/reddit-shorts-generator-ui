@@ -9,7 +9,12 @@ export default function VideoActionButton({ video }: VideoActionButtonProps) {
   const { isVideoProcessing, setIsVideoProcessing } = useVideoContext();
 
   const handleView = () => {
-    console.log("view");
+    // remove special characters from title
+    let postTitle = video.title.replace(/[^a-zA-Z0-9 ]/g, "");
+    // replace spaces with dashes
+    postTitle = postTitle.replace(/ /g, "-");
+
+    window.open(`/files/${video.postId}/${postTitle}.mp4`, "_blank");
   };
 
   const handleStart = async () => {
