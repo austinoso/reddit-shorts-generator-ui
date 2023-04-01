@@ -55,6 +55,7 @@ export async function update(req: Request, res: Response, next: NextFunction) {
     });
 
     res.json({
+      ok: true,
       message: "Updated video",
       data: {
         video: video,
