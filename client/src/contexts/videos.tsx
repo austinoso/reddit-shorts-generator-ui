@@ -1,6 +1,6 @@
 // build context for sharing and keeping video data
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 export default interface IVideo {
   _id: string;
@@ -21,6 +21,8 @@ interface IVideoContext {
   setWorkingVideo: (video: IVideo) => void;
   workingProgress: number;
   setWorkingProgress: (progress: number) => void;
+  isVideoProcessing: boolean;
+  setIsVideoProcessing: (processing: boolean) => void;
 }
 
 const VideoContext = createContext<IVideoContext>({
@@ -30,6 +32,8 @@ const VideoContext = createContext<IVideoContext>({
   setWorkingVideo: () => {},
   workingProgress: 0,
   setWorkingProgress: () => {},
+  isVideoProcessing: false,
+  setIsVideoProcessing: () => {},
 });
 
 export const VideoProvider = ({ children }: any) => {
@@ -40,6 +44,23 @@ export const VideoProvider = ({ children }: any) => {
     undefined
   );
   const [workingProgress, setWorkingProgress] = useState<number>(0);
+  const [videoProcessing, setVideoProcessing] = useState<boolean>(false);
+
+  const processingVideos = (videos: any) => {
+    let processingVideos = videos.filter(
+      (video: any) => video.status === "processing"
+    );
+
+    return processingVideos;
+  };
+
+  useEffect(() => {
+    if (processingVideos(videos).length > 0) {
+      setVideoProcessing(true);
+    } else {
+      setVideoProcessing(false);
+    }
+  }, [videos]);
 
   return (
     <VideoContext.Provider
@@ -50,6 +71,8 @@ export const VideoProvider = ({ children }: any) => {
         setWorkingVideo,
         workingProgress,
         setWorkingProgress,
+        isVideoProcessing: videoProcessing,
+        setIsVideoProcessing: setVideoProcessing,
       }}
     >
       {children}

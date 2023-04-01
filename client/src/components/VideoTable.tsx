@@ -6,20 +6,6 @@ import VideoActionButon from "./VideoActionButton";
 export default function VideoTable() {
   const { videos, setVideos, workingVideo, workingProgress } =
     useVideoContext();
-  const [disableStartButton, setDisableStartButton] = useState(false);
-
-  const processingVideos = (videos: any) => {
-    let processingVideos = videos.filter(
-      (video: any) => video.status === "processing"
-    );
-
-    return processingVideos;
-  };
-
-  const allowedToStart = (videos: any) => {
-    if (processingVideos(videos).length > 0) return false;
-    return true;
-  };
 
   useEffect(() => {
     fetch("/api/videos")
@@ -28,10 +14,6 @@ export default function VideoTable() {
         setVideos(data.data.videos);
       });
   }, []);
-
-  useEffect(() => {
-    setDisableStartButton(!allowedToStart(videos));
-  }, [videos]);
 
   const statusBadgeClasses: any = {
     added: "bg-grey-400 text-gray-800",
@@ -102,11 +84,7 @@ export default function VideoTable() {
                       </span>
                     </td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 flex justify-end space-x-3">
-                      <VideoActionButon
-                        video={video}
-                        disableStartButton={disableStartButton}
-                        setDisableStartButton={setDisableStartButton}
-                      />
+                      <VideoActionButon video={video} />
                       <a href="#" className="text-gray-600 hover:text-blue-900">
                         Edit<span className="sr-only">, {video.name}</span>
                       </a>

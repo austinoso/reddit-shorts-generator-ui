@@ -1,29 +1,24 @@
 import { startVideoProcessing, stopVideoProcessing } from "../utils/videoAPI";
+import { useVideoContext } from "../contexts/videos";
 
 interface VideoActionButtonProps {
   video: any;
-  disableStartButton: boolean;
-  setDisableStartButton: (disableStartButton: boolean) => void;
 }
 
-export default function VideoActionButton({
-  video,
-  disableStartButton,
-  setDisableStartButton,
-}: VideoActionButtonProps) {
+export default function VideoActionButton({ video }: VideoActionButtonProps) {
+  const { isVideoProcessing, setIsVideoProcessing } = useVideoContext();
+
   const handleView = () => {
     console.log("view");
   };
 
   const handleStart = async () => {
-    if (disableStartButton) return;
-    setDisableStartButton(true);
     console.log("starting: " + video._id);
 
     const data = await startVideoProcessing(video._id);
 
     if (data && !data.workerId) {
-      setDisableStartButton(false);
+      setIsVideoProcessing(false);
     }
   };
 
@@ -34,7 +29,7 @@ export default function VideoActionButton({
 
     console.log(data);
     if (data && !data.error) {
-      setDisableStartButton(false);
+      setIsVideoProcessing(true);
     } else {
       console.log(data.error);
     }
@@ -63,7 +58,7 @@ export default function VideoActionButton({
     <button
       onClick={handleStart}
       className={`${
-        disableStartButton && video.status === "new"
+        isVideoProcessing && video.status === "new"
           ? "text-gray-300 cursor-not-allowed"
           : "text-blue-600 hover:text-blue-900"
       }`}
