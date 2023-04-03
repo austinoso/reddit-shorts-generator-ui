@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 
 const videoSchema = new mongoose.Schema(
   {
@@ -35,6 +35,14 @@ export async function resetVideos() {
     video.status = "new";
     await video.save();
   }
+}
+
+export interface IVideo extends Document {
+  name: string;
+  title: string;
+  postId: string;
+  url: string;
+  status: string;
 }
 
 export default Video;
