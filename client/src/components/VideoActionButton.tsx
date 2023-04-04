@@ -3,9 +3,13 @@ import { useVideoContext } from "../contexts/videos";
 
 interface VideoActionButtonProps {
   video: any;
+  className?: string;
 }
 
-export default function VideoActionButton({ video }: VideoActionButtonProps) {
+export default function VideoActionButton({
+  video,
+  className = "",
+}: VideoActionButtonProps) {
   const { isVideoProcessing, setIsVideoProcessing } = useVideoContext();
 
   const handleView = () => {
@@ -64,9 +68,10 @@ export default function VideoActionButton({ video }: VideoActionButtonProps) {
   return (
     <button
       onClick={handleClick}
-      className={`${
-        buttonStates[video.status as keyof typeof buttonStates].color
-      }`}
+      className={
+        `${buttonStates[video.status as keyof typeof buttonStates].color}` +
+        className
+      }
       disabled={isVideoProcessing && video.status === "new"}
     >
       {buttonStates[video.status as keyof typeof buttonStates].text}
