@@ -40,35 +40,36 @@ export default function VideoActionButton({ video }: VideoActionButtonProps) {
     }
   };
 
-  if (video.status === "complete") {
-    return (
-      <button
-        onClick={handleView}
-        className="text-blue-600 hover:text-blue-900"
-      >
-        View
-      </button>
-    );
-  }
+  const handleClick = async () => {
+    if (video.status === "processing") await handleStop();
+    else if (video.status === "complete") handleView();
+    else if (video.status === "new") await handleStart();
+  };
 
-  if (video.status === "processing") {
-    return (
-      <button onClick={handleStop} className="text-red-600 hover:text-red-900">
-        Stop
-      </button>
-    );
-  }
+  const buttonStates = {
+    new: {
+      text: "Start",
+      color: "text-blue-600 hover:text-blue-900",
+    },
+    processing: {
+      text: "Stop",
+      color: "text-red-600 hover:text-red-900",
+    },
+    complete: {
+      text: "View",
+      color: "text-blue-600 hover:text-blue-900",
+    },
+  };
 
   return (
     <button
-      onClick={handleStart}
+      onClick={handleClick}
       className={`${
-        isVideoProcessing && video.status === "new"
-          ? "text-gray-300 cursor-not-allowed"
-          : "text-blue-600 hover:text-blue-900"
+        buttonStates[video.status as keyof typeof buttonStates].color
       }`}
+      disabled={isVideoProcessing && video.status === "new"}
     >
-      Start
+      {buttonStates[video.status as keyof typeof buttonStates].text}
     </button>
   );
 }
