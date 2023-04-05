@@ -1,0 +1,30 @@
+version: '3.7'
+
+volumes:
+  mongo-data:
+
+services:
+  reddit-video-gen-server:
+    build: ./
+    container_name: reddit-video-gen
+    privileged: true
+    env_file:
+      - .env
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/reddit-video-generator
+    ports:
+      - 7777:7777
+      - 7778:7778
+    volumes:
+      - ${FILE_OUTPUT}:/app/output
+      - ${CREDENTIALS_PATH}:/app/credentials.json
+    depends_on:
+      - mongo
+    
+  mongo: 
+    image: mongo
+    env_file:
+      - .env
+    container_name: mongo
+    volumes:
+      - mongo-data:/data/db
