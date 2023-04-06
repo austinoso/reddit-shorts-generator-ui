@@ -5,8 +5,7 @@ let db: Connection;
 
 export const connectMongo = async () => {
   const uri =
-    process.env.MONGODB_URI ||
-    "mongodb://localhost:27017/reddit-video-generator";
+    process.env.MONGO_URI || "mongodb://localhost:27017/reddit-video-generator";
 
   if (db) {
     return;
